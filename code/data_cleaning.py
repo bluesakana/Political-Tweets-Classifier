@@ -175,3 +175,107 @@ def compute_content_length(row, content_column, date_column, date_char_limit):
         return length / 140
     else:
         return length / 280
+    
+
+def tokenise(df, ngrams=(1,1)):
+    '''
+    Function to tokenise given column of strings in a pandas Series
+    
+    Parameters:
+    -----------
+    df: pandas Series
+        columns of strings to be tokenised
+    
+    ngrams: tuple
+        minimum and maximum range of ngrams to tokenise
+        Default = 1-gram
+        
+    Returns:
+    --------
+    pandas Dataframe of word tokens
+    
+    '''
+    from sklearn.feature_extraction.text import CountVectorizer
+    import pandas as pd
+    
+    # instantiate
+    cvz = CountVectorizer(stop_words='english', ngram_range=ngrams)
+    
+    # fit vectorizer
+    cvz.fit(df)
+    
+    return pd.DataFrame(cvz.transform(df).toarray(), columns=cvz.get_feature_names_out())
+
+
+def generate_wordcloud(df, axes, title, colors='Greys', bgcolor='white', width=800, height=800):
+    '''
+    Function to plot wordcloud given a pandas Series and the selected axes
+    
+    Parameters:
+    -----------
+    df: pandas Series
+        index of the Series represent the words and the values are the frequency of the words
+        
+    axes: matplotlib AxesSubplot
+        specific set of axis to plot the wordcloud
+        
+    title: str
+        title of the plot
+        
+    colors: str
+        name of color palette to use for wordcloud
+        Default Greys
+        
+    bgcolor: str
+        name of color
+        Default = 'white'
+        
+    width: int
+        width of plot in pixels
+        Default = 800
+        
+    height: int
+        height of plot in pixels
+        Default = 800
+        
+    '''
+    
+    from wordcloud import WordCloud
+    from nltk.corpus import stopwords
+    import matplotlib.pyplot as plt
+    
+    # instantiate
+    cloud = WordCloud(width = width, height = height,
+                      background_color =bgcolor, colormap=colors,
+                      stopwords = stopwords,
+                      min_font_size = 10
+                     )
+    
+    # generate wordcloud
+    cloud.generate_from_frequencies(df)
+    axes.imshow(cloud)
+    axes.axis('off')
+    axes.set_title(title, fontsize=18)
+    
+    
+def get_sentiment_score(tweet):
+    '''
+    Function which computes the sentiment score of a tweet
+    
+    Parameters:
+    -----------
+    tweet: str
+        string that will have sentiment scored
+        
+    Returns:
+    --------
+    float
+        sentiment_score
+    
+    '''
+    
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
+    
+    sid = SentimentIntensityAnalyzer()
+    
+    return sid.polarity_scores(tweet)['compound']
