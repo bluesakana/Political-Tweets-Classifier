@@ -1,178 +1,104 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web APIs & NLP
+<img src="./images/GA-logo.png" style="float: left; margin: 20px; height: 55px">
 
-### Description
+# Project 3: Evidence-Based Political Analysis in the Age of Social Media
 
-In week four we've learned about a few different classifiers. In week five we'll learn about webscraping, APIs, and Natural Language Processing (NLP). This project will put those skills to the test.
+**Primary Objectives:**
 
-For project 3, your goal is two-fold:
-1. You'll collect posts from two subreddits of your choosing. You can use [Pushshift's](https://github.com/pushshift/api) API or any other low-code platform for the same. 
-Alternatively, you can web-scrape or use any low-code platform, eg., parse-hub, collect data from twitter, wiki, facebook, insta etc.
-1. You'll then use NLP to train a classifier on which subreddit (or other sub-sections based on the site you choose to scrape your data from) a given post came from. This is a binary classification problem.
+1. Scrape tweets from two Twitter accounts
+2. Use NLP to train a classifier to predict the account a given tweet comes from (i.e. binary classification)
 
+----
 
-### Requirements
+## Problem Statement
 
-- Gather and prepare your data using the `requests` library.
-- **Create and compare two models**. One of these must be a Naive Bayes classifier, however the other can be a classifier of your choosing: logistic regression, KNN, SVM, etc.
-- A Jupyter Notebook with your analysis for a peer audience of data scientists.
-- An executive summary of your results.
-- A short presentation outlining your process and findings for a semi-technical audience.
+As a political analyst, the factors that best differentiate the 2 political parties' tweets are important in understanding the engagement approach  of the parties and the differences in political philosophies. Based on this understanding, if given an unlabelled tweet, would the analyst be able to discern from the Twitter accounts of 2 political parties the tweet is from?
 
-**Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+Political analysts frequently need to dissect and analyse the different stances that political parties take for similar issues. Today, many political analysts still rely on qualitative analysis. The findings from our model will hopefully be useful for analysts by supplementing their qualitative analysis with quantitative results.
 
----
+We will build a NLP binary classifier with explanatory and predictive power to attempt to predict whether a given tweet comes from 2 of Singapore's political parties, namely the @PAPSingapore and the @WPSG.
 
-### Necessary Deliverables / Submission
+----
 
-- Code must be in at least one clearly commented Jupyter Notebook.
-- A readme/executive summary in markdown.
-- You must submit your slide deck as a PDF.
-- Materials must be submitted by the specified date given by the Instructional Team through your GitHub account repo shared with the Instructional Team.
+## Background & External Research
 
----
+Political parties tend to talk about similar things, e.g., government policy, national security etc. Based on personal experience, anecdotal evidence and ChatGPT3, the tweets from different political parties (loosely based on those in the U.S.) can differ by a few key aspects despite being similar in content, namely:
+- **Messaging** - messaging usually reflects the party's ideology, values and priorities. For instance, conservative parties may emphasise on lower taxes, greater individual freedom and smaller government (e.g., Republicans in the U.S.) while liberal parties may emphasise on social justice, government intervention (e.g., Democrats in the U.S.). The type of messaging can also be proxied by the hashtags commonly used by the account
+- **Tone** - this can range from aggressive to conciliatory even if the content is similar (e.g., talking about the same topic), depending on the party's political objective
+- **Content Type** - Depending on the target audience, political parties may use different types of content that resonate better with the intended target audience. For example, political parties that tend to target younger voters may use more trendy language and memes.
+- **Frequency** - some political parties may tweet more often if the majority of voters are on Twitter. We will not use this in our classifier as frequency is not a valid characteristic of an individual tweet as defined in this problem statement.
+- **Level of Engagement** - some political parties may more readily engage their followers by replying to comments, mentioning users or retweeting to amplify messages from supporters.
 
-## Presentation Structure
+These key aspects may be present in the tweets of Singapore's political parties as well, albeit to different extents compared to the U.S. As such, we may be able to differentiate the tweets from different political parties by looking at these aspects of their tweets.
 
-- **Presentation Time: 10 minutes**
-- Presentations will a 10 minute presentation. You can use inspiration from the [ignite talks](http://www.ignitetalks.io/) framework to design your presentation (its fun!). Learn more about the [ignite style](https://speakingaboutpresenting.com/content/fast-ignite-presentation/) 
-- Use Google Slides or some other visual aid (Keynote, Powerpoint, etc).
-- Consider the audience. Assume you are presenting to a non-technical audience.
-- Start with the **data science problem**.
-- Use visuals that are appropriately scaled and interpretable.
-- Talk about your procedure/methodology (high level, **CODE IS ALWAYS INAPPROPRIATE FOR A NON-TECHNICAL AUDIENCE**).
-- Talk about your primary findings.
-- Make sure you provide **clear recommendations** that follow logically from your analyses and narrative and answer your data science problem.
+In testing this hypothesis, we choose Singapore's 2 largest political parties (based on number of seats in Parliament), and examine their tweets. These are:
+|  |  |
+|-------------|--------------|
+| <div style="text-align:center;"><img src="./images/twitter_pap.jpg" alt="PAP Logo" width="150" height="150" style="display: block; margin: 0 auto;"><br>**People's Action Party (PAP)**<br>[@PAPSingapore](https://twitter.com/PAPSingapore)</div> | <div style="text-align:center;"><img src="./images/twitter_wp.jpg" alt="WP Logo" width="150" height="150" style="display: block; margin: 0 auto;"><br>**The Workers' Party (WP)**<br>[@WPSG](https://twitter.com/wpsg?lang=en)</div> |
 
 
-Be sure to rehearse and time your presentation before class.
+----
+## Dataset
 
----
+The Tweets dataset contains the tweets and attributes of the tweets from both political parties from 2010 to 2022. The dataset is in the `datasets` folder.
 
-## Rubric
-Teaching team will evaluate your project using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+----
+## Technical Report
 
-**Note:** Presentation will be done as a group while codes will be prepared and submitted by each student.
+The technical report is split into 4 parts in the `code` folder.
 
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
+In addition to the Jupyter notebooks, there are 2 python scripts that contain user-defined functions to aid in the data cleaning and analysis.
 
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
+----
+## Findings and Conclusions
 
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
+### Selection of model metric
+For model evaluation, there are many metrics that can be used. For this problem statement, we will use average F1 score to provide a balance between precision and recall. This is because:
+1. The dataset is quite balanced between the 2 Twitter accounts
+2. Classifying the tweet wrongly either way is equally detrimental
 
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
+Hence, we will not prioritise precision or recall but aim to get the best F1 score instead.
 
+### Model tuning and evaluation
 
-### The Data Science Process
+We tested and tuned 3 models through a training dataset with 5-fold cross validation and then the test dataset as a barometer to evaluate their performance. The summary of performance of various models is summarised below.
 
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
+| Model | Training Avg F1 Score | 5-Fold Cross Val Avg F1 Score | Test Avg F1 Score |
+| :- | -: | -: | -: |
+| Baseline | 0.337 | - |  |
+| **Messaging Only** |  |  |  |
+| Naive Bayes Simplified | 0.950 | 0.925 | 0.919 |
+| Random Forest Simplified | 0.967 | 0.918 | 0.914 |
+| Logistic Regression Simplified | 0.968 | 0.925 | 0.921 |
+| **All Aspects** |  |  |  |
+| Naive Bayes | 0.924 | 0.902 | 0.917 |
+| Random Forest | 0.937 | 0.918 | 0.925 |
+| Logistic Regression | 0.974 | 0.939 | 0.941 |
 
-**Data Collection**
-- Was enough data gathered to generate a significant result?
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
+After analysing the wrong predictions, we note that most of these predictions are difficult even for humans to differentiate. This is because of 
+1. Lack of information due to the general nature of the tweet
+2. Additional information embedded within the photos/videos/weblinks which the current models cannot extract
 
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
+As such, we choose the full **Logistic Regression model** for further business insights.
 
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** Random Forest and one other model)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
+### Business Insights
 
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
+<img src="./images/Features.png" alt="Top50" width="800" height="400" style="display: block; margin: 0 auto;">
 
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
+- **Messaging** features have the greatest impact on the log odds ratio of identifying the account the tweet is from
+- **Content type** features are the next most impactful, specifically the presence of a weblink increases the log odds ratio of the account being PAP by 2x while the presence of a GIF increases the ratio of the account being WP by 2.6x
+- **Tone** of the tweet has a smaller impact and a positive tone generally increases the odds of the account being PAP. This means that PAP's tweets tend to be more positive
+- **Level of Engagement** features generally increases the odds of the tweet being from WP. This means that WP's tweets tend to have greater levels of engagement
 
+<img src="./images/top50.png" alt="Top50" width="800" height="400" style="display: block; margin: 0 auto;">
 
-### Organization and Professionalism
+Specifically on **Messaging** features, we note that PAP's tweets tend to reference the party (e.g. pap4sg) and PM (e.g. lhl, pm), while WP's tweets similarly reference their MPs (e.g., He Ting Ru, Fairoz, Sylvia) and constituencies (e.g. Sengkang, Hougang, AHPETC)
+- PAP's tweets raise key events such as ndm2015, ndrsg. Similarly, WP's tweets focuses on political activities related to them, specifically outreach, grassroots and youth wing
+- In terms of policy interests unique to each account, PAP's tweets tend to raise the needy more while WP's tweets focuses on poweer (a.k.a. people's power) and tax
 
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
+### Conclusion and Future Work
 
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
-
----
-
-### Why did we choose this project for you?
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
-
-Part 1 of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL.  There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but often scraping it because they don't have an API (or it's terribly documented).
-
-Part 2 of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
-
-Part 3 of the project focuses on **Classification Modeling**.  Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.   
+- While the classification model is not perfect, it provides a good predictor for identifying which political party's Twitter account a tweet belongs to
+- More importantly, the model tells us why, in the terms of the messaging, content type, tone and enagement level
+- Examining these details can enable political analysts to better understand the unique interests, philosophies and approach of each party
+- Further improvements to the model such as additional new information about the multimedia attachments can further improvement the model performance
+- The utility of this project goes beyond that for political analysts. Building on this understanding, political parties can modify the model's outcome variable to suit their objectives, e.g. optimise engagement rates by examining what features in the messaging increases engagement the most
